@@ -58,11 +58,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		ImGui::Begin("ImGui Window");
 
 		ImGui::SliderInt("FOV Changer", &fov, -180, 180);
-		uintptr_t gameModule = (DWORD)GetModuleHandle("client.dll");
-		uintptr_t LocalPlayer = RPM<uintptr_t>(gameModule + dwLocalPlayer);
-		if (!LocalPlayer)
-			return oEndScene(pDevice);
-		WPM<int>(LocalPlayer + m_iDefaultFOV, fov);
+		static auto gameModule = (DWORD)GetModuleHandle("client.dll");
+		const auto LocalPlayer = RPM<uintptr_t>(gameModule + dwLocalPlayer);
+		if (LocalPlayer)
+			WPM<int>(LocalPlayer + m_iDefaultFOV, fov);
 
 		ImGui::End();
 
